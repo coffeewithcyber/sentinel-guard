@@ -1,0 +1,150 @@
+{% extends "base.html" %}
+
+{% block title %}Reports - Sentinel-Guard{% endblock %}
+
+{% block page_title %}Security Reports{% endblock %}
+
+{% block page_actions %}
+<button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#generateReportModal">
+    <i data-feather="file-plus"></i> Generate Report
+</button>
+{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Available Reports</h5>
+            </div>
+            <div class="card-body">
+                {% if reports %}
+                <div class="table-responsive">
+                    <table id="reports-table" class="table table-striped table-hover">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Title</th>
+                                <th>Format</th>
+                                <th>Created At</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for report in reports %}
+                            <tr>
+                                <td>{{ report.id }}</td>
+                                <td>{{ report.title }}</td>
+                                <td><span class="badge bg-secondary">{{ report.format.upper() }}</span></td>
+                                <td>{{ report.created_at.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+                                <td>
+                                    <a href="{{ url_for('download_report', report_id=report.id) }}" class="btn btn-sm btn-primary">
+                                        <i data-feather="download"></i> Download
+                                    </a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="alert alert-info">
+                    <i data-feather="info" class="me-2"></i> No reports have been generated yet. Use the "Generate Report" button to create your first report.
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Report Types Information -->
+<div class="row mb-4">
+    <div class="col-md-4 mb-3">
+        <div class="card report-card h-100">
+            <div class="card-body">
+                <h5 class="card-title">
+                    <i data-feather="alert-triangle" class="text-danger me-2"></i>
+                    Alert Reports
+                </h5>
+                <p class="card-text">Comprehensive reports of all security alerts detected by Sentinel-Guard within a specified time period. Includes severity, source, destination, and detailed messages.</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-3">
+        <div class="card report-card h-100">
+            <div class="card-body">
+                <h5 class="card-title">
+                    <i data-feather="activity" class="text-primary me-2"></i>
+                    Traffic Reports
+                </h5>
+                <p class="card-text">Detailed analysis of network traffic patterns, including protocols, source/destination IPs, data sizes, and timestamps. Useful for optimizing network performance and security.</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-3">
+        <div class="card report-card h-100">
+            <div class="card-body">
+                <h5 class="card-title">
+                    <i data-feather="pie-chart" class="text-success me-2"></i>
+                    Summary Reports
+                </h5>
+                <p class="card-text">High-level overview of system security status, including alert distribution by severity, traffic patterns, top source/destination IPs, and critical/high alerts.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Generate Report Modal -->
+<div class="modal fade" id="generateReportModal" tabindex="-1" aria-labelledby="generateReportModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="generateReportModalLabel">Generate New Report</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="alert alert-danger d-none" id="form-error" role="alert"></div>
+                
+                <form id="report-form" action="{{ url_for('generate_report') }}" method="post">
+                    <div class="mb-3">
+                        <label for="report-type" class="form-label">Report Type</label>
+                        <select class="form-select" id="report-type" name="report_type" required>
+                            <option value="" selected disabled>Select report type</option>
+                            <option value="alerts">Security Alerts</option>
+                            <option value="traffic">Network Traffic</option>
+                            <option value="summary">Security Summary</option>
+                        </select>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="start-date" class="form-label">Start Date</label>
+                        <input type="text" class="form-control" id="start-date" name="start_date" placeholder="Select start date" required>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="end-date" class="form-label">End Date</label>
+                        <input type="text" class="form-control" id="end-date" name="end_date" placeholder="Select end date" required>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="format-type" class="form-label">Format</label>
+                        <select class="form-select" id="format-type" name="format" required>
+                            <!-- Options will be populated by JavaScript -->
+                        </select>
+                    </div>
+                    
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary">
+                            <i data-feather="file-text" class="me-2"></i> Generate Report
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/reports.js') }}"></script>
+{% endblock %}

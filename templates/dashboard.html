@@ -1,0 +1,307 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - Sentinel-Guard{% endblock %}
+
+{% block page_title %}Security Dashboard{% endblock %}
+
+{% block page_actions %}
+<div class="dropdown">
+    <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+        <i data-feather="calendar"></i> Time Range
+    </button>
+    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+        <li><a class="dropdown-item" href="#">Last Hour</a></li>
+        <li><a class="dropdown-item" href="#">Last 6 Hours</a></li>
+        <li><a class="dropdown-item" href="#">Last 24 Hours</a></li>
+        <li><a class="dropdown-item" href="#">Last 7 Days</a></li>
+    </ul>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="alert alert-info alert-dismissible fade show" role="alert">
+            <strong>Welcome to Sentinel-Guard!</strong> Your network is being actively monitored for threats.
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    </div>
+</div>
+
+<!-- Alert Summary Cards -->
+<div class="row mb-4">
+    <div class="col-md-2 mb-3">
+        <div class="counter-card card text-white bg-dark h-100">
+            <div class="card-body text-center">
+                <h5 class="card-title">Total Alerts</h5>
+                <p class="counter" id="alert-counter">{{ alert_summary.critical + alert_summary.high + alert_summary.medium + alert_summary.low + alert_summary.info }}</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-2 mb-3">
+        <div class="counter-card critical card text-white h-100">
+            <div class="card-body text-center">
+                <h5 class="card-title">Critical</h5>
+                <p class="counter" id="critical-count">{{ alert_summary.critical }}</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-2 mb-3">
+        <div class="counter-card high card text-white h-100">
+            <div class="card-body text-center">
+                <h5 class="card-title">High</h5>
+                <p class="counter" id="high-count">{{ alert_summary.high }}</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-2 mb-3">
+        <div class="counter-card medium card text-white h-100">
+            <div class="card-body text-center">
+                <h5 class="card-title">Medium</h5>
+                <p class="counter" id="medium-count">{{ alert_summary.medium }}</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-2 mb-3">
+        <div class="counter-card low card text-white h-100">
+            <div class="card-body text-center">
+                <h5 class="card-title">Low</h5>
+                <p class="counter" id="low-count">{{ alert_summary.low }}</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-2 mb-3">
+        <div class="counter-card info card text-white h-100">
+            <div class="card-body text-center">
+                <h5 class="card-title">Info</h5>
+                <p class="counter" id="info-count">{{ alert_summary.info }}</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Charts Row -->
+<div class="row mb-4">
+    <div class="col-md-6 mb-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Network Traffic Over Time</h5>
+            </div>
+            <div class="card-body">
+                <div class="chart-container">
+                    <canvas id="traffic-chart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 mb-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Alert Severity Distribution</h5>
+            </div>
+            <div class="card-body">
+                <div class="chart-container">
+                    <canvas id="alert-severity-chart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col-md-6 mb-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Protocol Distribution</h5>
+            </div>
+            <div class="card-body">
+                <div class="chart-container">
+                    <canvas id="traffic-type-chart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 mb-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Latest Alerts</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-sm">
+                        <thead>
+                            <tr>
+                                <th>Severity</th>
+                                <th>Source IP</th>
+                                <th>Time</th>
+                                <th>Message</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for alert in alerts %}
+                            <tr>
+                                <td>
+                                    {% if alert.severity == 'critical' %}
+                                    <span class="badge bg-danger text-white fw-bold">CRITICAL</span>
+                                    {% elif alert.severity == 'high' %}
+                                    <span class="badge bg-danger text-white">HIGH</span>
+                                    {% elif alert.severity == 'medium' %}
+                                    <span class="badge bg-warning">MEDIUM</span>
+                                    {% elif alert.severity == 'low' %}
+                                    <span class="badge bg-primary text-white">LOW</span>
+                                    {% else %}
+                                    <span class="badge bg-info">INFO</span>
+                                    {% endif %}
+                                </td>
+                                <td>{{ alert.source_ip }}</td>
+                                <td>{{ alert.timestamp.strftime('%H:%M:%S') }}</td>
+                                <td>{{ alert.message }}</td>
+                            </tr>
+                            {% else %}
+                            <tr>
+                                <td colspan="4" class="text-center">No alerts to display</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Log Table -->
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Network Traffic Logs</h5>
+                <button class="btn btn-sm btn-outline-secondary" id="refresh-logs">
+                    <i data-feather="refresh-cw"></i> Refresh
+                </button>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table id="logs-table" class="table table-striped table-hover">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Timestamp</th>
+                                <th>Severity</th>
+                                <th>Protocol</th>
+                                <th>Source IP</th>
+                                <th>Destination IP</th>
+                                <th>Port</th>
+                                <th>Size</th>
+                                <th>Message</th>
+                            </tr>
+                        </thead>
+                        <tbody id="logs-table-body">
+                            {% for log in logs %}
+                            <tr>
+                                <td>{{ log.id }}</td>
+                                <td>{{ log.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+                                <td>
+                                    {% if log.severity == 'critical' %}
+                                    <span class="badge bg-danger text-white fw-bold">CRITICAL</span>
+                                    {% elif log.severity == 'high' %}
+                                    <span class="badge bg-danger text-white">HIGH</span>
+                                    {% elif log.severity == 'medium' %}
+                                    <span class="badge bg-warning">MEDIUM</span>
+                                    {% elif log.severity == 'low' %}
+                                    <span class="badge bg-primary text-white">LOW</span>
+                                    {% else %}
+                                    <span class="badge bg-info">INFO</span>
+                                    {% endif %}
+                                </td>
+                                <td>{{ log.protocol }}</td>
+                                <td>{{ log.source_ip }}</td>
+                                <td>{{ log.destination_ip }}</td>
+                                <td>{{ log.port }}</td>
+                                <td>{{ log.data_size }}</td>
+                                <td>{{ log.message }}</td>
+                            </tr>
+                            {% else %}
+                            <tr>
+                                <td colspan="9" class="text-center">No logs to display</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Alerts Modal -->
+<div class="modal fade" id="alertsModal" tabindex="-1" aria-labelledby="alertsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="alertsModalLabel">Active Alerts</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="table-responsive">
+                    <table id="alerts-table" class="table table-striped table-hover">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Timestamp</th>
+                                <th>Severity</th>
+                                <th>Source IP</th>
+                                <th>Destination IP</th>
+                                <th>Message</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="alerts-table-body">
+                            {% for alert in alerts %}
+                            <tr>
+                                <td>{{ alert.id }}</td>
+                                <td>{{ alert.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+                                <td>
+                                    {% if alert.severity == 'critical' %}
+                                    <span class="badge bg-danger text-white fw-bold">CRITICAL</span>
+                                    {% elif alert.severity == 'high' %}
+                                    <span class="badge bg-danger text-white">HIGH</span>
+                                    {% elif alert.severity == 'medium' %}
+                                    <span class="badge bg-warning">MEDIUM</span>
+                                    {% elif alert.severity == 'low' %}
+                                    <span class="badge bg-primary text-white">LOW</span>
+                                    {% else %}
+                                    <span class="badge bg-info">INFO</span>
+                                    {% endif %}
+                                </td>
+                                <td>{{ alert.source_ip }}</td>
+                                <td>{{ alert.destination_ip }}</td>
+                                <td>{{ alert.message }}</td>
+                                <td>
+                                    {% if not alert.acknowledged %}
+                                    <button class="btn btn-sm btn-primary acknowledge-btn" data-id="{{ alert.id }}">Acknowledge</button>
+                                    {% else %}
+                                    <span class="badge bg-success">Acknowledged</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% else %}
+                            <tr>
+                                <td colspan="7" class="text-center">No alerts to display</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+{% endblock %}

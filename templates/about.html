@@ -1,0 +1,247 @@
+{% extends "base.html" %}
+
+{% block title %}About - Sentinel-Guard{% endblock %}
+
+{% block page_title %}About Sentinel-Guard{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="row align-items-center">
+                    <div class="col-md-3 text-center mb-3 mb-md-0">
+                        <img src="{{ url_for('static', filename='svg/logo.svg') }}" alt="Sentinel-Guard Logo" width="150" height="150">
+                    </div>
+                    <div class="col-md-9">
+                        <h3>Sentinel-Guard: Advanced Network Security</h3>
+                        <p class="lead">A cross-platform Intrusion Detection and Response system with real-time monitoring, threat classification, and alerting capabilities.</p>
+                        <p>Sentinel-Guard provides comprehensive network security through continuous monitoring of inbound and outbound traffic, threat analysis, and immediate alerting to help organizations stay protected against evolving cyber threats.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Key Features</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-4 mb-4">
+                        <div class="d-flex">
+                            <div class="flex-shrink-0">
+                                <i data-feather="shield" class="text-primary" style="width: 36px; height: 36px;"></i>
+                            </div>
+                            <div class="flex-grow-1 ms-3">
+                                <h5>Real-Time Monitoring</h5>
+                                <p>Continuously monitors network traffic for suspicious activity and potential threats.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-4">
+                        <div class="d-flex">
+                            <div class="flex-shrink-0">
+                                <i data-feather="alert-triangle" class="text-warning" style="width: 36px; height: 36px;"></i>
+                            </div>
+                            <div class="flex-grow-1 ms-3">
+                                <h5>Threat Classification</h5>
+                                <p>Categorizes threats by severity - Critical, High, Medium, Low, and Informational.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-4">
+                        <div class="d-flex">
+                            <div class="flex-shrink-0">
+                                <i data-feather="bell" class="text-danger" style="width: 36px; height: 36px;"></i>
+                            </div>
+                            <div class="flex-grow-1 ms-3">
+                                <h5>Alerting System</h5>
+                                <p>Sends real-time alerts via dashboard notifications and email.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-4">
+                        <div class="d-flex">
+                            <div class="flex-shrink-0">
+                                <i data-feather="file-text" class="text-success" style="width: 36px; height: 36px;"></i>
+                            </div>
+                            <div class="flex-grow-1 ms-3">
+                                <h5>Comprehensive Reporting</h5>
+                                <p>Generate detailed reports in multiple formats (PDF, CSV, JSON, TXT).</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-4">
+                        <div class="d-flex">
+                            <div class="flex-shrink-0">
+                                <i data-feather="monitor" class="text-info" style="width: 36px; height: 36px;"></i>
+                            </div>
+                            <div class="flex-grow-1 ms-3">
+                                <h5>Cross-Platform</h5>
+                                <p>Compatible with Windows, Linux, and other operating systems.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-4">
+                        <div class="d-flex">
+                            <div class="flex-shrink-0">
+                                <i data-feather="settings" class="text-secondary" style="width: 36px; height: 36px;"></i>
+                            </div>
+                            <div class="flex-grow-1 ms-3">
+                                <h5>Customizable</h5>
+                                <p>Configurable alert thresholds and notification settings.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Our Team</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-4 mb-4">
+                        <div class="team-member">
+                            <img src="https://via.placeholder.com/150" alt="Team Member" class="mb-3">
+                            <h4>John Davidson</h4>
+                            <p class="text-muted">Lead Developer</p>
+                            <p class="small">Cybersecurity expert with over 10 years of experience in network security and intrusion detection systems.</p>
+                            <div class="social-links">
+                                <a href="#"><i class="fab fa-linkedin"></i></a>
+                                <a href="#"><i class="fab fa-github"></i></a>
+                                <a href="#"><i class="fab fa-twitter"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-4">
+                        <div class="team-member">
+                            <img src="https://via.placeholder.com/150" alt="Team Member" class="mb-3">
+                            <h4>Sarah Chen</h4>
+                            <p class="text-muted">Security Analyst</p>
+                            <p class="small">Specializes in threat intelligence and security operations with expertise in malware analysis and incident response.</p>
+                            <div class="social-links">
+                                <a href="#"><i class="fab fa-linkedin"></i></a>
+                                <a href="#"><i class="fab fa-github"></i></a>
+                                <a href="#"><i class="fab fa-twitter"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-4">
+                        <div class="team-member">
+                            <img src="https://via.placeholder.com/150" alt="Team Member" class="mb-3">
+                            <h4>Michael Rodriguez</h4>
+                            <p class="text-muted">UI/UX Designer</p>
+                            <p class="small">Creates intuitive and user-friendly interfaces for security applications with a focus on clear visualization of complex data.</p>
+                            <div class="social-links">
+                                <a href="#"><i class="fab fa-linkedin"></i></a>
+                                <a href="#"><i class="fab fa-github"></i></a>
+                                <a href="#"><i class="fab fa-twitter"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Contact Information</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <div class="d-flex">
+                            <div class="flex-shrink-0">
+                                <i data-feather="mail" class="text-primary me-2"></i>
+                            </div>
+                            <div class="flex-grow-1">
+                                <h6>Email Support</h6>
+                                <p>support@sentinel-guard.example.com</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="d-flex">
+                            <div class="flex-shrink-0">
+                                <i data-feather="globe" class="text-primary me-2"></i>
+                            </div>
+                            <div class="flex-grow-1">
+                                <h6>Website</h6>
+                                <p>www.sentinel-guard.example.com</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="d-flex">
+                            <div class="flex-shrink-0">
+                                <i data-feather="phone" class="text-primary me-2"></i>
+                            </div>
+                            <div class="flex-grow-1">
+                                <h6>Technical Support</h6>
+                                <p>+1 (555) 123-4567</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="d-flex">
+                            <div class="flex-shrink-0">
+                                <i data-feather="github" class="text-primary me-2"></i>
+                            </div>
+                            <div class="flex-grow-1">
+                                <h6>GitHub Repository</h6>
+                                <p>github.com/sentinel-guard/idr-system</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Version Information</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-sm">
+                        <tbody>
+                            <tr>
+                                <th style="width: 200px;">Version</th>
+                                <td>1.0.0</td>
+                            </tr>
+                            <tr>
+                                <th>Release Date</th>
+                                <td>{{ now.strftime('%B %d, %Y') }}</td>
+                            </tr>
+                            <tr>
+                                <th>License</th>
+                                <td>MIT License</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

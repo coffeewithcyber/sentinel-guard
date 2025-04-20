@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+
+{% block auth_content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-5">
+            <div class="auth-form card bg-dark">
+                <div class="card-body">
+                    <div class="logo text-center mb-4">
+                        <img src="{{ url_for('static', filename='svg/logo.svg') }}" alt="Sentinel-Guard Logo" width="100" height="100">
+                        <h4 class="mt-3 mb-4">
+                            <span class="text-white">Sentinel</span>
+                            <span class="text-primary">Guard</span>
+                        </h4>
+                    </div>
+                    
+                    {% with messages = get_flashed_messages(with_categories=true) %}
+                        {% if messages %}
+                            {% for category, message in messages %}
+                                <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                                    {{ message }}
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+                    {% endwith %}
+                    
+                    <form method="post" action="{{ url_for('login') }}">
+                        <div class="mb-3">
+                            <label for="username" class="form-label">Username</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i data-feather="user"></i></span>
+                                <input type="text" class="form-control" id="username" name="username" placeholder="Enter your username" required autofocus>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label for="password" class="form-label">Password</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i data-feather="lock"></i></span>
+                                <input type="password" class="form-control" id="password" name="password" placeholder="Enter your password" required>
+                            </div>
+                        </div>
+                        
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary">
+                                <i data-feather="log-in" class="me-2"></i> Login
+                            </button>
+                        </div>
+                    </form>
+                    
+                    <div class="text-center mt-4">
+                        <p>Don't have an account? <a href="{{ url_for('register') }}">Register</a></p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="text-center mt-4 text-muted">
+                <p class="small">
+                    &copy; 2023 Sentinel-Guard. All rights reserved.<br>
+                    Advanced Intrusion Detection and Response System
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        feather.replace();
+    });
+</script>
+{% endblock %}

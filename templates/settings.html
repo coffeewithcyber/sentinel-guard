@@ -1,0 +1,199 @@
+{% extends "base.html" %}
+
+{% block title %}Settings - Sentinel-Guard{% endblock %}
+
+{% block page_title %}System Settings{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="alert alert-info">
+            <i data-feather="info" class="me-2"></i> Configure Sentinel-Guard settings to customize how the system monitors, analyzes, and alerts on security threats.
+        </div>
+        <div id="settings-alerts"></div>
+    </div>
+</div>
+
+<form id="settings-form" action="{{ url_for('settings') }}" method="post">
+    <div class="row mb-4">
+        <!-- Monitoring Settings -->
+        <div class="col-md-6 mb-4">
+            <div class="card settings-section">
+                <div class="card-header">
+                    <h5 class="mb-0">Monitoring Settings</h5>
+                </div>
+                <div class="card-body">
+                    <div class="form-check form-switch mb-3">
+                        <input class="form-check-input" type="checkbox" id="monitoring-enabled" name="monitoring_enabled" {% if settings.monitoring_enabled %}checked{% endif %}>
+                        <label class="form-check-label" for="monitoring-enabled">
+                            Enable Network Monitoring
+                        </label>
+                        <div class="form-text">Toggle real-time network traffic monitoring</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Alert Thresholds -->
+        <div class="col-md-6 mb-4">
+            <div class="card settings-section">
+                <div class="card-header">
+                    <h5 class="mb-0">Alert Thresholds</h5>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label for="alert-threshold-critical" class="form-label">Critical Threshold <span class="badge bg-danger" id="critical-value">{{ settings.alert_threshold_critical }}</span></label>
+                        <input type="range" class="form-range" min="0" max="100" step="1" id="alert-threshold-critical" name="alert_threshold_critical" value="{{ settings.alert_threshold_critical }}">
+                    </div>
+                    <div class="mb-3">
+                        <label for="alert-threshold-high" class="form-label">High Threshold <span class="badge bg-danger text-white" id="high-value">{{ settings.alert_threshold_high }}</span></label>
+                        <input type="range" class="form-range" min="0" max="100" step="1" id="alert-threshold-high" name="alert_threshold_high" value="{{ settings.alert_threshold_high }}">
+                    </div>
+                    <div class="mb-3">
+                        <label for="alert-threshold-medium" class="form-label">Medium Threshold <span class="badge bg-warning" id="medium-value">{{ settings.alert_threshold_medium }}</span></label>
+                        <input type="range" class="form-range" min="0" max="100" step="1" id="alert-threshold-medium" name="alert_threshold_medium" value="{{ settings.alert_threshold_medium }}">
+                    </div>
+                    <div class="mb-3">
+                        <label for="alert-threshold-low" class="form-label">Low Threshold <span class="badge bg-primary" id="low-value">{{ settings.alert_threshold_low }}</span></label>
+                        <input type="range" class="form-range" min="0" max="100" step="1" id="alert-threshold-low" name="alert_threshold_low" value="{{ settings.alert_threshold_low }}">
+                    </div>
+                    <div class="form-text">
+                        Adjust threat detection thresholds for each severity level. Higher values mean the system will be more selective in categorizing threats at that level.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row mb-4">
+        <!-- Email Notification Settings -->
+        <div class="col-md-12 mb-4">
+            <div class="card settings-section">
+                <div class="card-header">
+                    <h5 class="mb-0">Email Notification Settings</h5>
+                </div>
+                <div class="card-body">
+                    <div class="form-check form-switch mb-3">
+                        <input class="form-check-input" type="checkbox" id="email-notifications" name="email_notifications" {% if settings.email_notifications %}checked{% endif %}>
+                        <label class="form-check-label" for="email-notifications">
+                            Enable Email Notifications
+                        </label>
+                        <div class="form-text">Receive email notifications for critical and high severity alerts</div>
+                    </div>
+                    
+                    <div id="email-settings">
+                        <div class="mb-3">
+                            <label for="email-recipients" class="form-label">Email Recipients</label>
+                            <input type="text" class="form-control" id="email-recipients" name="email_recipients" value="{{ settings.email_recipients }}" placeholder="email1@example.com, email2@example.com">
+                            <div class="form-text">Comma-separated list of email addresses to receive alerts</div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="smtp-server" class="form-label">SMTP Server</label>
+                                <input type="text" class="form-control" id="smtp-server" name="smtp_server" value="{{ settings.smtp_server }}">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="smtp-port" class="form-label">SMTP Port</label>
+                                <input type="number" class="form-control" id="smtp-port" name="smtp_port" value="{{ settings.smtp_port }}">
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="smtp-username" class="form-label">SMTP Username</label>
+                                <input type="text" class="form-control" id="smtp-username" name="smtp_username" value="{{ settings.smtp_username }}">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="smtp-password" class="form-label">SMTP Password</label>
+                                <input type="password" class="form-control" id="smtp-password" name="smtp_password" placeholder="Leave empty to keep current password">
+                                <div class="form-text">Leave blank to keep current password</div>
+                            </div>
+                        </div>
+                        
+                        <button type="button" id="test-smtp" class="btn btn-outline-primary">
+                            <i data-feather="send" class="me-1"></i> Test Connection
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="d-grid gap-2 d-md-flex justify-content-md-end mb-4">
+        <button type="reset" class="btn btn-outline-secondary me-md-2">
+            <i data-feather="refresh-cw" class="me-1"></i> Reset
+        </button>
+        <button type="submit" class="btn btn-primary">
+            <i data-feather="save" class="me-1"></i> Save Settings
+        </button>
+    </div>
+</form>
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">System Information</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="table-responsive">
+                            <table class="table table-sm">
+                                <tbody>
+                                    <tr>
+                                        <th style="width: 200px;">Operating System</th>
+                                        <td id="os-info">Loading...</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Application Version</th>
+                                        <td>1.0.0</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Database</th>
+                                        <td>SQLite</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="table-responsive">
+                            <table class="table table-sm">
+                                <tbody>
+                                    <tr>
+                                        <th style="width: 200px;">CPU Usage</th>
+                                        <td id="cpu-usage">Loading...</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Memory Usage</th>
+                                        <td id="memory-usage">Loading...</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Disk Space</th>
+                                        <td id="disk-space">Loading...</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/settings.js') }}"></script>
+<script>
+    // Simulate system information loading
+    setTimeout(() => {
+        document.getElementById('os-info').textContent = navigator.platform || 'Unknown';
+        document.getElementById('cpu-usage').textContent = '23%';
+        document.getElementById('memory-usage').textContent = '512 MB / 2048 MB';
+        document.getElementById('disk-space').textContent = '4.2 GB free';
+    }, 1000);
+</script>
+{% endblock %}
